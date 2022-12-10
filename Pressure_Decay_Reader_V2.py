@@ -52,7 +52,7 @@ col1.metric('Mean Temperature [°C]',  round(Room_Temp.mean(), 1))
 col2.metric('Mean Atmospheric Pressure [kPa]', round((Room_Press.mean()*100), 3))
 
 col3, col4, col5, col6, col7= st.columns(5)
-col3.metric('Last 5 Presusre Decay Rates [kPa]', round(P_decay[-6],5))
+col3.metric('Last 5 Pressure Decay Rates [kPa]', round(P_decay[-6],5))
 col4.metric('fourth-to-last', round(P_decay[-4],5))
 col5.metric('Third-to-last', round(P_decay[-3],5))
 col6.metric('Second-to-last', round(P_decay[-2],5))
