@@ -28,13 +28,16 @@ df['Time']= df['Time'].dt.total_seconds()
 df_trim= df[['Time','Press [bar]']]
 df_trim['Press [kPa]']= df_trim['Press [bar]']*100 
 df_trim= df_trim.groupby(np.arange(len(df))//ds_samples).mean()
+print(df_trim['Press [kPa]'])
 
 P_decay= []
 for i in range(len(df_trim['Press [kPa]'])):
     if i==0:
-        P_decay.append(0)
+        dtime= (df_trim['Time'][0] - df_trim['Time'][1])
+        dpress= (df_trim['Press [kPa]'][1] - df_trim['Press [kPa]'][0])
+        P_decay.append(dpress/dtime)
     else:
-        dtime= (df_trim['Time'][i] - df_trim['Time'][i-1])
+        dtime= (df_trim['Time'][i-1] - df_trim['Time'][i])
         dpress= (df_trim['Press [kPa]'][i] - df_trim['Press [kPa]'][i-1])
         P_decay.append(dpress/dtime)
 with st.expander(r'''See Data'''):
@@ -58,11 +61,18 @@ col5.metric('Third-to-last', round(P_decay[-3],5))
 col6.metric('Second-to-last', round(P_decay[-2],5))
 col7.metric('Last...', round(P_decay[-1],5))
 
+z = np.polyfit(df_trim['Time'], P_decay, 2)
+f = np.poly1d(z)
+x_new = np.linspace(df_trim['Time'][0], df_trim['Time'][:-1], 50)
+y_new = f(x_new)
+
 fig,ax = plt.subplots()
 ax.plot(df_trim['Time'], df_trim['Press [kPa]'], c='k');
 ax.set_ylabel("Pressure [kPa]",color="black",fontsize=14)
 ax2=ax.twinx()
 ax2.plot(df_trim['Time'],P_decay, c='b')
+ax2.plot(x_new, y_new, c='r')
 ax2.set_ylabel("Press. Decay rate [kPa/s]",color="blue",fontsize=14)
+ax.set_xscale('log')
 ax.set_xlabel('Time [s]');
 st.pyplot(fig)
