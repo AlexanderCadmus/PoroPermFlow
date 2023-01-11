@@ -73,7 +73,7 @@ ax2=ax.twinx()
 ax2.plot(df_trim['Time'],P_decay, c='b')
 ax2.plot(x_new, y_new, c='r')
 ax2.set_ylabel("Press. Decay rate [kPa/s]",color="blue",fontsize=14)
-ax.set_xscale('log')
+#ax.set_xscale('log')
 ax.set_yscale('log')
 ax2.set_yscale('log')
 ax.set_xlabel('Time [s]');
